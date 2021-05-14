@@ -6,10 +6,12 @@ import (
 	"net/http"
 	"os"
 
-	//"github.com/kyleplant/delta-solivia-exporter/pkg/exporter"
 	"github.com/go-kit/kit/log/level"
+	"github.com/kyleplant/delta-solivia-exporter/pkg/exporter"
+	"github.com/prometheus/client_golang/prometheus"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
 	"github.com/prometheus/common/promlog"
+	"github.com/prometheus/common/version"
 )
 
 var (
@@ -17,10 +19,29 @@ var (
 	metricsPath = flag.String("metrics.path", "/metrics", "URL path for surfacing collected metrics")
 )
 
+func init() {
+	prometheus.MustRegister(version.NewCollector("delta_solivia_exporter"))
+}
+
 func main() {
 
+	var (
+		opts = exporter.SerialOpts{}
+	)
 	promlogConfig := &promlog.Config{}
 	logger := promlog.New(promlogConfig)
+
+	level.Info(logger).Log("msg", "Starting delta_solivia_exporter", "version", version.Info())
+	level.Info(logger).Log("build_context", version.BuildContext())
+
+	exporter, err := exporter.New(opts, logger)
+	if err != nil {
+		level.Error(logger).Log("msg", "Error creating the exporter", "err", err)
+		os.Exit(1)
+	}
+
+	prometheus.MustRegister(exporter)
+
 	http.Handle(*metricsPath, promhttp.Handler())
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		w.Write([]byte(`<html>

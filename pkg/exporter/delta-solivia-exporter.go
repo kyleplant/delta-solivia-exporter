@@ -9,7 +9,7 @@ import (
 )
 
 const (
-	namespace = "delta-solivia"
+	namespace = "delta_solivia"
 )
 
 var (
@@ -28,8 +28,7 @@ var (
 // Exporter collects power stats from the given serial device connected to a
 // Delta Solivia inverter and exports them using the prometheus metrics package.
 type Exporter struct {
-	healthSummary bool
-	logger        log.Logger
+	logger log.Logger
 }
 
 // SerialOpts configures options for connecting to serial device connected to inverter.
@@ -42,12 +41,11 @@ type SerialOpts struct {
 }
 
 // New returns an initialized Exporter.
-func New(opts SerialOpts, healthSummary bool, logger log.Logger) (*Exporter, error) {
+func New(opts SerialOpts, logger log.Logger) (*Exporter, error) {
 
 	// Init our exporter.
 	return &Exporter{
-		healthSummary: healthSummary,
-		logger:        logger,
+		logger: logger,
 	}, nil
 }
 

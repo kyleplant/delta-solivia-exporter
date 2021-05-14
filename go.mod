@@ -1,4 +1,4 @@
-module delta-solivia-exporter
+module github.com/kyleplant/delta-solivia-exporter
 
 go 1.16
 
