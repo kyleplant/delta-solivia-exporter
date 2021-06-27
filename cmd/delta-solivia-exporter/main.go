@@ -24,12 +24,24 @@ func init() {
 }
 
 func main() {
-
 	var (
 		opts = exporter.SerialOpts{}
 	)
+
 	promlogConfig := &promlog.Config{}
 	logger := promlog.New(promlogConfig)
+
+	// table := crc16.MakeTable(crc16.CRC16_MODBUS)
+
+	// fmt.Printf("%v\n", table)
+
+	// crc := crc16.Checksum([]byte("\x13\x03"), table)
+	// fmt.Printf("CRC-16 MAXIM: %X\n", crc)
+
+	// // using the standard library hash.Hash interface
+	// h := crc16.New(table)
+	// h.Write([]byte("\x13\x03"))
+	// fmt.Printf("CRC-16 MAXIM: %X\n", h.Sum16())
 
 	level.Info(logger).Log("msg", "Starting delta_solivia_exporter", "version", version.Info())
 	level.Info(logger).Log("build_context", version.BuildContext())
